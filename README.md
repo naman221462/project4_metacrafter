@@ -1,6 +1,5 @@
 # project4_metacrafter
 
-```markdown
 # Hotel Room Booking Smart Contract
 
 This Solidity smart contract manages the booking of hotel rooms on the blockchain. It allows users to book available rooms and check their status.
