@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.9;
+
+contract HotelRoomBooking {
+    enum RoomStatus { Vacant, Occupied }
+
+    struct Room {
+        uint256 roomId;
+        RoomStatus status;
+        address occupant;
+    }
+
+    mapping(uint256 => Room) public rooms;
+    uint256 public totalRooms;
+
+    event RoomBooked(uint256 roomId, address occupant);
+
+    constructor(uint256 _totalRooms) {
+        totalRooms = _totalRooms;
+        for (uint256 i = 1; i <= totalRooms; i++) {
+            rooms[i].roomId = i;
+            rooms[i].status = RoomStatus.Vacant;
+        }
+    }
+
+    function bookRoom(uint256 _roomId) public {
+        require(_roomId > 0 && _roomId <= totalRooms, "Invalid room ID");
+        require(rooms[_roomId].status == RoomStatus.Vacant, "Room is already occupied");
+
+        rooms[_roomId].status = RoomStatus.Occupied;
+        rooms[_roomId].occupant = msg.sender;
+
+        emit RoomBooked(_roomId, msg.sender);
+    }
+
+    function checkRoomStatus(uint256 _roomId) public view returns (RoomStatus) {
+        require(_roomId > 0 && _roomId <= totalRooms, "Invalid room ID");
+
+        return rooms[_roomId].status;
+    }
+
+    function getRoomOccupant(uint256 _roomId) public view returns (address) {
+        require(_roomId > 0 && _roomId <= totalRooms, "Invalid room ID");
+        require(rooms[_roomId].status == RoomStatus.Occupied, "Room is vacant");
+
+        return rooms[_roomId].occupant;
+    }
+}
